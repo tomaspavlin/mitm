@@ -2,22 +2,34 @@
 #define PACKET_H_
 
 #include <netpacket/packet.h>
-#include "utils.h"
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
-#include <sys/socket.h>
 #include <net/if.h>
+#include <netinet/ip.h>
+#include <netinet/ether.h>
 
+#include "utils.h"
 
 #define SOCKADDR_SIZE sizeof(struct sockaddr_ll)
 
-struct eth_packet {
-	uint8_t dest[6];
-	uint8_t source[6];
+typedef enum  {PD_1TO2, PD_2TO1, PD_OTHER} pkt_dir_t; // who is sending the packet
+
+struct eth_packet
+{
+	uint8_t dest[ETH_ALEN];
+	uint8_t source[ETH_ALEN];
 	uint16_t type;
 };
 
-struct sockaddr_ll getsockaddr(char * ifname, uint8_t * hwaddr); // return sockaddr structure. ifname is interface name, hwaddr is mac address
+struct ip_packet
+{
+	struct ether_header eth_h;
+	struct iphdr ip_h;
+} __attribute__((__packed__));
 
-void gethwaddr(uint8_t * hwaddr, char * ifname); // get hardware address of interface ifname and save it to hwaddr
+struct sockaddr_ll getsockaddr(char * ifname);
+void gethwaddr(uint8_t * hwaddr, char * ifname);
+void printpktinfo(struct ip_packet * p, size_t p_size);
+int logpacket(struct ip_packet * p, size_t p_size);
+void printbuf(const uint8_t * buf, size_t numbytes);
 #endif

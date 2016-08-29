@@ -6,10 +6,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-bool parse_hwa(uint8_t * buf, char * addr); // parse hardware adress
-bool parse_ipa(uint8_t * buf, char * addr); // parse ip adress
-void hwa_tostr(char * buf, uint8_t * addr); // save string representation of hw addr to buf
-void ipa_tostr(char * buf, uint8_t * addr); // save string representation of ip addr to buf
-int p(char * msg); // print msg to standard output
+#define IPA_STR_LEN 16
+#define HWA_STR_LEN 18
+
+bool parse_hwa(uint8_t * buf, char * addr);
+bool parse_ipa(uint8_t * buf, char * addr);
+void hwa_tostr(char * buf, uint8_t * addr);
+void ipa_tostr(char * buf, uint8_t * addr);
 
 #endif

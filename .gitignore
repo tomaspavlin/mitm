@@ -33,3 +33,7 @@
 *.su
 
 arpspoof
+temp
+temp.c
+sniffer
+log.txt
