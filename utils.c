@@ -47,3 +47,23 @@ void ipa_tostr(char * buf, uint8_t * addr)
 	snprintf(buf, IPA_STR_LEN, "%d.%d.%d.%d",
 					addr[0], addr[1], addr[2], addr[3]);
 }
+
+void *
+mymemmem(void * big, size_t big_len, const void *little, size_t little_len)
+{
+	void * p;
+	int i;
+
+	for(p = big; p+little_len < big+big_len; p++){
+		for(i=0; i<little_len; i++){
+			if(*((uint8_t *) p+i) != *((uint8_t *) little+i))
+				break;
+		}
+
+		if(i == little_len){
+			return p;
+		}
+	}
+
+	return NULL;
+}

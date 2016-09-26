@@ -28,7 +28,7 @@ void
 showusage(int argc, char ** argv)
 {
   printf("Usage: %s <interface> <target1-ip> \
-    <target1-mac> <target2-ip> <target2-mac> ", argv[0]);
+<target1-mac> <target2-ip> <target2-mac> ", argv[0]);
 
   exit(1);
 }

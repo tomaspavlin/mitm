@@ -1,4 +1,4 @@
-OBJ = utils.o arp.o packet.o mutils.o
+OBJ = utils.o arp.o packet.o mutils.o packet_tcp.o
 DEPS = *.h
 
 all: arpspoof sniffer
