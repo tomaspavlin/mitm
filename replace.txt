@@ -1,1 +1,5 @@
-Not implemented yet.
+4
+Accept-Encoding: gzip, deflate, sdch
+Accept-Encoding: identity           
+Tome
+vole

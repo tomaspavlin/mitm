@@ -5,6 +5,7 @@
 #include <netinet/ether.h>
 
 #include <signal.h>
+#include <unistd.h>
 
 #include "utils.h"
 #include "arp.h"
@@ -57,9 +58,21 @@ cleanup()
   exit(0);
 }
 
+void
+showusage(int argc, char ** argv)
+{
+  printf("Usage: %s <interface> <target1-ip> \
+<target1-mac> <target2-ip> <target2-mac>\n", argv[0]);
+
+  exit(1);
+}
+
 int
 main(int argc, char ** argv)
 {
+  if (argc < 6)
+    showusage(argc, argv);
+
   process_args(argc, argv);
 
   // create arp packet

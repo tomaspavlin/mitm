@@ -49,7 +49,7 @@ modify_tcp_checksum(struct tcp_packet * p, size_t numbytes)
 	size_t buf_len = numbytes - sizeof(struct ip_packet) +
 		sizeof(struct tcp_pseudo_header) - sizeof(struct tcphdr);
 	uint8_t buf[buf_len];
-memset(buf, 0, buf_len);
+	memset(buf, 0, buf_len);
 
 	// create pseudo header
 	struct tcp_pseudo_header * ph = (struct tcp_pseudo_header *) buf;

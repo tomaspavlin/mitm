@@ -1,6 +1,8 @@
 #include <netpacket/packet.h>
 #define _GNU_SOURCE // HACK
 #include <string.h>
+#include <unistd.h>
+#include <ctype.h>
 
 #include "packet.h"
 #include "packet_tcp.h"
@@ -49,8 +51,6 @@ dprintpkt_s(int fd, const struct ip_packet * p, size_t p_size)
 	char ipa_d[IPA_STR_LEN];
 	char hwa_s[HWA_STR_LEN];
 	char hwa_d[HWA_STR_LEN];
-
-	uint8_t a[ETH_ALEN];
 
 	hwa_tostr(hwa_s,(uint8_t *) &p->eth_h.ether_shost);
 	hwa_tostr(hwa_d,(uint8_t *) &p->eth_h.ether_dhost);

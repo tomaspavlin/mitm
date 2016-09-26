@@ -24,14 +24,7 @@ uint8_t hwa_host[ETH_ALEN];
 /* address for sendto */
 struct sockaddr_ll sa;
 
-void
-showusage(int argc, char ** argv)
-{
-  printf("Usage: %s <interface> <target1-ip> \
-<target1-mac> <target2-ip> <target2-mac> ", argv[0]);
 
-  exit(1);
-}
 
 /*
  * this method show usage if there is no sufficient
@@ -43,8 +36,7 @@ showusage(int argc, char ** argv)
 void
 process_args(int argc, char ** argv)
 {
-  if (argc < 6)
-    showusage(argc, argv);
+
 
   // save params
   if_name = argv[1];
