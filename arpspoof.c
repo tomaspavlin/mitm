@@ -69,7 +69,7 @@ showusage(int argc, char ** argv)
   printf("Usage: %s <interface> <target1-ip> \
 <target1-mac> <target2-ip> <target2-mac>\n\
 Example: %s wlan0 192.168.1.1 \
-12:23:34:45:56:67 192.168.1.42 11:22:33:44:55:66", argv[0], argv[0]);
+12:23:34:45:56:67 192.168.1.42 11:22:33:44:55:66\n", argv[0], argv[0]);
 
   exit(1);
 }
