@@ -101,8 +101,13 @@ processbuf(uint8_t * buf, size_t numbytes)
 		return;
 
 	/* write packet short info to STDOUT*/
-	//dprintpkt_s(1, ip_p, numbytes); 
+  //dprintpkt_l(1, ip_p, numbytes);
+  //dprintpkt_l(lfd, ip_p, numbytes); 
+  //printf("%d\n",lfd);
 
+  /* write packet long info into log file (log packet) */
+  if(lfd >= 0)
+    dprintpkt_l(lfd, ip_p, numbytes);
 
 	/* inject packet */
 	int ic;
@@ -112,10 +117,6 @@ processbuf(uint8_t * buf, size_t numbytes)
 		//printf("%d\n", ic);
 		//printf("<%s>\n",arr[3]);
 	}
-
-	/* write packet long info into log file (log packet) */
-	if(lfd >= 0)
-		dprintpkt_l(lfd, ip_p, numbytes);
 
 	/* forward packet to other target */
 	forwardpacket(ip_p, numbytes);
@@ -196,6 +197,7 @@ load_repl_pairs(int argc, char ** argv)
 
 	}
   } else {
+    printf("Packets wont be injected.\n");
   	// repl_pairs_c is set to 0 already
   }
 }
@@ -208,8 +210,13 @@ void
 cleanup()
 {
   puts("Finishing up...");
-  close(s);
-  close(lfd);
+
+  if(close(s) < 0)
+    perror("closing s");
+
+  if(close(lfd) < 0)
+    perror("closing s");
+
   exit(0);
 }
 
@@ -219,7 +226,7 @@ showusage(int argc, char ** argv)
   printf("Usage: %s <interface> <target1-ip> \
 <target1-mac> <target2-ip> <target2-mac> [<replacement-file> [<log-file>]]\n\n\
 Example:\n%s wlan0 192.168.1.1 \
-12:23:34:45:56:67 192.168.1.42 11:22:33:44:55:66 replace.txt log.txt\
+12:23:34:45:56:67 192.168.1.42 11:22:33:44:55:66 replace.txt log.txt\n\
 %s wlan0 192.168.1.1 \
 12:23:34:45:56:67 192.168.1.42 11:22:33:44:55:66 - /dev/stdout\n", argv[0], argv[0], argv[0]);
 

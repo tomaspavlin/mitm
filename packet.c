@@ -176,7 +176,7 @@ injectpkt(struct ip_packet * p, size_t numbytes, char ** subs, size_t subs_c)
 	uint8_t * buf = (uint8_t *) p + sizeof(struct ip_packet);
 	size_t buf_len = numbytes - sizeof(struct ip_packet);
 
-	for(; i<subs_c-1; i+=2){
+	for(; (int)i <(int)subs_c-1; i+=2){
 		//printf("Bytes: %lu\n",numbytes - sizeof(struct ip_packet));
 		while((pos = mymemmem(buf, buf_len, subs[i], strlen(subs[i]))) != NULL){
 		
