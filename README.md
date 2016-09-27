@@ -13,12 +13,12 @@ The program will send each second one ARP reply packet to each of the victims sa
 
 ### sniffer ###
 Program looks at the every packet and if the packet source and destination IP addresses are victim's and it is IPv4 packet, process following steps (in this order):
-- if log file parameter (see the USAGE section) is provided, log packet in human readable form to the file
-- if replacement file parameter is provided, injects packet by replacing some substrings with anothers (see the USAGE section)
+- if log file parameter (see the *USAGE* section) is provided, logs packet in human readable form to the file
+- if replacement file parameter is provided, injects packet by replacing some substrings with anothers (see the *USAGE* section for more info)
 - if the packet was injected in the previous step and it is TCP packet, eval new checksum
 - forward packet to the right victim
 
-When a packet is injected, program write a message about it to standard output. It is silent otherwise. For the verbose mode, you can use */dev/stdout* as the last parameter.
+When a packet is injected, program write a message about it to the standard output. Program is silent otherwise. For the verbose mode, you can use */dev/stdout* as the last parameter.
 
 COMPILATION
 ---
@@ -71,6 +71,7 @@ The first 5 arguments should have set the same value as the the 5 arguments of t
 - `<replacement-file>`
 	Replacement file path.
 	If this parameter is provided, packets will be injected using a replacement file with *find and replace* method. Replacement file is a text file with the following format:
+	
 		<number of lines following>
 		<find 1>
 		<replace 1>
@@ -81,10 +82,10 @@ The first 5 arguments should have set the same value as the the 5 arguments of t
 	- `<number of lines following>` is number of `find` and `replace` lines in the file. The number should be even.
 	- Pair `<find>` and `<replace>`: If there is a string *<find>* in the packet, it is replaced with *<replace>* string. These both strings should have the same length.
 	Most of the http servers compress the packet data so they are unreadable for the sniffer then. To stop the compressing, it is very useful to add these *find and replace* lines to your replacement file (note that the second line ends with spaces so that both lines has the same length):
-
-		Accept-Encoding: gzip, deflate, sdch
+	```
+	Accept-Encoding: gzip, deflate, sdch
 		Accept-Encoding: identity           
-
+	```
 	If you do not need to inject the packets but still need to provide the following argument, use *-* instead of the replacement file path.
 
 	There is an example replacement file in root directory *replace.txt*.
@@ -105,6 +106,7 @@ Redirects the victim traffic to the attacker with first command. Then bridge log
 	sudo ./sniffer wlan0 192.168.43.1 b4:3a:28:63:e6:ab 192.168.43.108 54:e6:fc:8e:b9:99 - /dev/stdout 
 
 Redirects the victims traffic to the attacker with first command. Then injects all IPv4 packets by replacing string apple with linux, log the packets to the *log.txt* file and forward them so the victims do not know that someting is happening.
+
 	sudo ./arpspoof wlan0 192.168.43.1 b4:3a:28:63:e6:ab 192.168.43.107 54:e6:fc:8e:b9:99 &
 	sudo ./sniffer wlan0 192.168.43.1 b4:3a:28:63:e6:ab 192.168.43.108 54:e6:fc:8e:b9:99 replace.txt log.txt 
 
