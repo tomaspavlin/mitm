@@ -44,7 +44,6 @@ uint16_t checksum(const uint8_t *buf, size_t size)
 void
 modify_tcp_checksum(struct tcp_packet * p, size_t numbytes)
 {
-
 	// create buffer for pseudoheader
 	size_t buf_len = numbytes - sizeof(struct ip_packet) +
 		sizeof(struct tcp_pseudo_header) - sizeof(struct tcphdr);

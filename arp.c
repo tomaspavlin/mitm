@@ -1,5 +1,7 @@
 #include "arp.h"
 
+/* create a binary representation of
+ * arp reply packet */
 struct arp_packet
 create_arp_packet(uint8_t * target_ipa, uint8_t * target_hwa, uint8_t * host_ipa, uint8_t * host_hwa)
 {

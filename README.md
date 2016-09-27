@@ -1,2 +1,12 @@
 # mitm
-Implementation of mitm attack using arp spoofing
+This is application written in C for Unix (debugged on Linux), that implements Man in the middle attack. It consists of two programs. Program **arpspoof** is for poisoning two victims with arp packets, so they would send all IPv4 packets to attacker. Second program **sniffer** is for redirection of the victims packets to the other victim, so that communication between the victims would work. Second program can also injects the packets and log them.
+
+##COMPILATION
+To compilate the application, simply run the *make* command in its root directory. Only Unix standard libraries are needed.
+
+##COMMAND LINE USAGE
+
+
+##ARCHITECTURE
+##TESTS
+##RESTRICTIONS

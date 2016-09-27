@@ -3,7 +3,6 @@
 #include <string.h>
 #include <netinet/ether.h>
 
-
 #include "packet.h"
 #include "utils.h"
 
@@ -24,19 +23,15 @@ uint8_t hwa_host[ETH_ALEN];
 /* address for sendto */
 struct sockaddr_ll sa;
 
-
-
 /*
- * this method show usage if there is no sufficient
- * number of args and exit the program. If there is
- * sufficient number of args, save them into proper
- * global variables and convert is to binary repre-
+ * This method should be called only if there is
+ * sufficient number of args. It saves the args into proper
+ * global variables and convert them to binary repre-
  * sentation.
  */
 void
 process_args(int argc, char ** argv)
 {
-
 
   // save params
   if_name = argv[1];

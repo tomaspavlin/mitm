@@ -4,7 +4,6 @@
 
 #include "utils.h"
 
-
 // parse hardware adress
 bool
 parse_hwa(uint8_t * buf, char * str)

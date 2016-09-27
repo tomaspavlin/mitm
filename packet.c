@@ -1,11 +1,12 @@
 #include <netpacket/packet.h>
-#define _GNU_SOURCE // HACK
+//#define _GNU_SOURCE // HACK
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
 
 #include "packet.h"
 #include "packet_tcp.h"
+
 /*
  * returns sockaddr_ll structure made
  * with interface name ifname
@@ -13,6 +14,7 @@
 struct sockaddr_ll
 getsockaddr(char * ifname)
 {
+	//TODO
 	struct sockaddr_ll ret;
 	memset(&ret, 0, sizeof(ret));
 	ret.sll_ifindex = if_nametoindex(ifname);
@@ -23,7 +25,8 @@ getsockaddr(char * ifname)
   	return ret;
 }
 
-/* get local hardware address of interface ifname
+/* 
+ * get local hardware address of interface ifname
  * and save it to hwaddr buffer
  */
 void
@@ -34,7 +37,12 @@ gethwaddr(uint8_t * hwaddr, char * ifname)
 
 	s = socket(PF_INET, SOCK_DGRAM, 0);
 	strcpy(buf.ifr_name, ifname);
-	ioctl(s, SIOCGIFHWADDR, &buf);
+
+	if(ioctl(s, SIOCGIFHWADDR, &buf) < 0){
+		perror("ioctl");
+		exit(1);
+	}
+
 	close(s);
 
 	memcpy(hwaddr, buf.ifr_hwaddr.sa_data, ETH_ALEN);
@@ -92,7 +100,6 @@ id: %hd, frag_off: %hd, ttl: %hhd, check: %hd\n\n",
 		p->ip_h.ttl,
 		ntohs(p->ip_h.check));
 
-	
 	// write data in both hex and text representation
 	w("Data (hex representation):\n");
 	dprintbuf_f(fd, (uint8_t *) p + sizeof(struct ip_packet),
@@ -155,7 +162,10 @@ printbuf(const uint8_t * buf, size_t numbytes)
 	dprintbuf(1, buf, numbytes);
 }
 
-
+/*
+ * substitute data in ip packet with substitution pairs
+ * (subs, subs_c). If something substituted, set the new checksum.
+ * Returns number of substitutions */
 int
 injectpkt(struct ip_packet * p, size_t numbytes, char ** subs, size_t subs_c)
 {
@@ -166,7 +176,6 @@ injectpkt(struct ip_packet * p, size_t numbytes, char ** subs, size_t subs_c)
 	uint8_t * buf = (uint8_t *) p + sizeof(struct ip_packet);
 	size_t buf_len = numbytes - sizeof(struct ip_packet);
 
-
 	for(; i<subs_c-1; i+=2){
 		//printf("Bytes: %lu\n",numbytes - sizeof(struct ip_packet));
 		while((pos = mymemmem(buf, buf_len, subs[i], strlen(subs[i]))) != NULL){
@@ -175,9 +184,8 @@ injectpkt(struct ip_packet * p, size_t numbytes, char ** subs, size_t subs_c)
 				occur++;
 				memcpy(pos, subs[i+1], strlen(subs[i+1]));
 
-				dprintbuf_f(1, pos -2, strlen(subs[i+1])+5, PBF_CHAR);
-				//printf("Pos: %hhn, Len: %d\n", pos, (int) strlen(subs[i+1]));
-				//dprintbuf_f(1, pos, strlen(subs[i+1]), PBF_CHAR);
+				printf("IP packet injected ('%s' > '%s').\n", subs[i], subs[i+1]);
+				//dprintbuf_f(1, pos -2, strlen(subs[i+1])+5, PBF_CHAR);
 			} else {
 				dprintf(2, "Error: Lengths of strings '%s' and '%s' differ.", subs[i], subs[i+1]);
 			}
@@ -191,7 +199,4 @@ injectpkt(struct ip_packet * p, size_t numbytes, char ** subs, size_t subs_c)
 	}
 
 	return occur;
-	
-
-
 }

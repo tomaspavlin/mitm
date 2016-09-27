@@ -18,10 +18,12 @@
 
 int s; // socket
 int lfd; // log file descriptor, -1 of log disabled
+
 /* array of replacement pairs. Even items are matches,
  * odds their replaicement. A match end a replacement
  * should have the same length */
 char ** repl_pairs_arr; 
+
 int repl_pairs_c = 0; // number of items (repl_pairs * 2)
 
 /*
@@ -103,8 +105,6 @@ processbuf(uint8_t * buf, size_t numbytes)
 
 
 	/* inject packet */
-
-
 	int ic;
 	if((ic = injectpkt(ip_p, numbytes, repl_pairs_arr, repl_pairs_c))){
 		//printf("INJECTED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
@@ -112,8 +112,6 @@ processbuf(uint8_t * buf, size_t numbytes)
 		//printf("%d\n", ic);
 		//printf("<%s>\n",arr[3]);
 	}
-
-
 
 	/* write packet long info into log file (log packet) */
 	if(lfd >= 0)
@@ -125,14 +123,15 @@ processbuf(uint8_t * buf, size_t numbytes)
 
 /* if 7. argument (file), reads replacement pairs from file and save to
  * repl_pairs_arr, repl_pairs_c
- * FILE used because of the parsing ability */
+ * FILE used because of the parsing ability
+ * if 7. argument is -, don't load any replacement pairs */
 void
 load_repl_pairs(int argc, char ** argv)
 {
   int i = 0;
   int len;
 
-  if(argc >= 7){
+  if(argc >= 7 && strcmp(argv[6], "-") != 0){
   	// open file
   	FILE * rf = fopen(argv[6], "r");
   	if(rf == NULL){
@@ -149,12 +148,12 @@ load_repl_pairs(int argc, char ** argv)
   		exit(1);
   	}
 
-  	// HACK: get to next line
+  	// get to next line
   	while(1){
   		int c = fgetc(rf);
   		if(c == '\n') break;
   		if(c == EOF) {
-	  		dprintf(2,"Invalit replacement file format\n");
+	  		dprintf(2,"Invalid replacement file format\n");
 	  		exit(1);
 	  	}
   	}
@@ -193,13 +192,12 @@ load_repl_pairs(int argc, char ** argv)
 	  		exit(1);
 	  	}
 
-	  	printf("In TCP packets '%s' will be replaced with '%s'\n", repl_pairs_arr[i], repl_pairs_arr[i+1]);
+	  	printf("In TCP packets, '%s' will be replaced with '%s'\n", repl_pairs_arr[i], repl_pairs_arr[i+1]);
 
 	}
   } else {
   	// repl_pairs_c is set to 0 already
   }
-
 }
 
 /* 
@@ -219,7 +217,11 @@ void
 showusage(int argc, char ** argv)
 {
   printf("Usage: %s <interface> <target1-ip> \
-<target1-mac> <target2-ip> <target2-mac> [<replacement-file> [<log-file>]]\n", argv[0]);
+<target1-mac> <target2-ip> <target2-mac> [<replacement-file> [<log-file>]]\n\n\
+Example:\n%s wlan0 192.168.1.1 \
+12:23:34:45:56:67 192.168.1.42 11:22:33:44:55:66 replace.txt log.txt\
+%s wlan0 192.168.1.1 \
+12:23:34:45:56:67 192.168.1.42 11:22:33:44:55:66 - /dev/stdout\n", argv[0], argv[0], argv[0]);
 
   exit(1);
 }
@@ -242,7 +244,6 @@ main(int argc, char ** argv)
    * and repl_pairs_c */
   load_repl_pairs(argc, argv);
 
-
   /* init log fd (lfd) */
   if(argc >= 8){
   	lfd = open(argv[7], O_RDWR|O_APPEND|O_CREAT);
@@ -253,8 +254,6 @@ main(int argc, char ** argv)
   } else {
   	lfd = -1; /* disable logging */
   }
-
-
 
   // initialize socket
   s = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_IP));
@@ -284,14 +283,13 @@ main(int argc, char ** argv)
     cleanup();
   }
 
-  // some other stuff
+  // cleanup if pressing ^C
   signal(SIGINT, cleanup);
 
   // start sniffing
   puts("Sniffing started...");
 
   while (1) {
-    //numbytes = recvfrom(s, buf, BUF_SIZE, 0, NULL, NULL); 
     // recv packet
     numbytes = recv(s, buf, BUF_SIZE, 0); 
 
