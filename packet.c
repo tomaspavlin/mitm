@@ -39,10 +39,13 @@ gethwaddr(uint8_t * hwaddr, char * ifname)
 	s = socket(PF_INET, SOCK_DGRAM, 0);
 	strcpy(buf.ifr_name, ifname);
 
+	// HACK
+#ifndef __APPLE__
 	if(ioctl(s, SIOCGIFHWADDR, &buf) < 0){
 		perror("ioctl");
 		exit(1);
 	}
+#endif
 
 	close(s);
 
