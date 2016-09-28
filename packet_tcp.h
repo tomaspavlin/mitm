@@ -1,12 +1,12 @@
 #ifndef PACKET_TCP_H_
 #define PACKET_TCP_H_
 
-#include <netpacket/packet.h>
+//#include <netpacket/packet.h>
 #include <arpa/inet.h>
 
 #include <net/if.h>
 #include <netinet/ip.h>
-#include <netinet/ether.h>
+#include <netinet/if_ether.h>
 #include <netinet/tcp.h>
 
 #include "utils.h"
