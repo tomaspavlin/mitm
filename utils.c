@@ -1,11 +1,11 @@
 #include <stdio.h>
-#include <stdbool.h>
+//#include <stdbool.h>
 #include <string.h>
 
 #include "utils.h"
 
 // parse hardware adress
-bool
+int
 parse_hwa(uint8_t * buf, char * str)
 {
 	int n = sscanf(str, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
@@ -15,7 +15,7 @@ parse_hwa(uint8_t * buf, char * str)
 }
 
 // parse ip adress
-bool
+int
 parse_ipa(uint8_t * buf, char * str)
 {
 	int n = sscanf(str, "%hhu.%hhu.%hhu.%hhu",
