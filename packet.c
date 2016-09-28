@@ -33,23 +33,26 @@ getsockaddr(char * ifname)
 void
 gethwaddr(uint8_t * hwaddr, char * ifname)
 {
+
+	// BRUTAL HACK
+#ifndef __APPLE__
 	int s;
 	struct ifreq buf;
 
 	s = socket(PF_INET, SOCK_DGRAM, 0);
 	strcpy(buf.ifr_name, ifname);
 
-	// HACK
-#ifndef __APPLE__
+
 	if(ioctl(s, SIOCGIFHWADDR, &buf) < 0){
 		perror("ioctl");
 		exit(1);
 	}
-#endif
+
 
 	close(s);
 
 	memcpy(hwaddr, buf.ifr_hwaddr.sa_data, ETHER_ADDR_LEN);
+#endif
 }
 
 /* 
