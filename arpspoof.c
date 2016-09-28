@@ -15,6 +15,7 @@
 /* partability to OSX */
 #ifndef AF_PACKET
 #define AF_PACKET PF_NDRV
+#define ETH_P_ARP 0x0806
 #endif
 
 /* interval between sending the packets (in secons) */
