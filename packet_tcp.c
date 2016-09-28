@@ -63,10 +63,10 @@ modify_tcp_checksum(struct tcp_packet * p, size_t numbytes)
 	memcpy(&ph->tcph, &p->tcp_h, buf_len - sizeof(struct tcp_pseudo_header) +
 		sizeof(struct tcphdr));
 
-	ph->tcph.check = 0;
+	ph->tcph.th_sum = 0;
 
 
 	// set correct checksum in tcp packet 
-	p->tcp_h.check = checksum(buf, buf_len);
+	p->tcp_h.th_sum = checksum(buf, buf_len);
 
 }
