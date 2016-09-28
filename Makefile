@@ -1,7 +1,7 @@
 OBJ = utils.o arp.o packet.o mutils.o packet_tcp.o
 DEPS = *.h
 
-CFLAGS = -Wall -g
+CFLAGS += -Wall -g
 
 all: arpspoof sniffer
 

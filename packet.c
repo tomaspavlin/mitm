@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 #include "packet.h"
 #include "packet_tcp.h"

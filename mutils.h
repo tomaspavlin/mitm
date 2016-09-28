@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <netinet/ether.h>
+//#include <netinet/ether.h>
 
 #include "packet.h"
 

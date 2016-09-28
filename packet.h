@@ -6,7 +6,7 @@
 #include <sys/ioctl.h>
 #include <net/if.h>
 #include <netinet/ip.h>
-#include <netinet/ether.h>
+#include <netinet/if_ether.h>
 
 #include "utils.h"
 

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
-#include <netinet/ether.h>
+//#include <netinet/ether.h>
 #include <fcntl.h>
 #include <unistd.h>
 
