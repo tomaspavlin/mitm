@@ -1,7 +1,7 @@
 #ifndef PACKET_H_
 #define PACKET_H_
 
-#include <netpacket/packet.h>
+//#include <netpacket/packet.h>
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
 #include <net/if.h>
