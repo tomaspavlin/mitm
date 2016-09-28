@@ -12,6 +12,11 @@
 #include "packet.h"
 #include "mutils.h"
 
+/* partability to OSX */
+#ifndef AF_PACKET
+#define AF_PACKET PF_NDRV
+#endif
+
 /* interval between sending the packets (in secons) */
 #define SLEEP_DELAY 1
 
