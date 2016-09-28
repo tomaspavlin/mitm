@@ -8,6 +8,7 @@
 #include <net/if.h>
 #include <netinet/ip.h>
 #include <netinet/if_ether.h>
+#include "lib/iphdr.h"
 
 
 #include "utils.h"
