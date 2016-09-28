@@ -33,9 +33,9 @@ int repl_pairs_c = 0; // number of items (repl_pairs * 2)
 pkt_dir_t
 get_pkt_dir(struct ip_packet * p)
 {
-	if(memcmp(&p->eth_h.ether_shost, hwa1, ETH_ALEN) == 0)
+	if(memcmp(&p->eth_h.ether_shost, hwa1, ETHER_ADDR_LEN) == 0)
 		return PD_1TO2;
-	else if(memcmp(&p->eth_h.ether_shost, hwa2, ETH_ALEN) == 0)
+	else if(memcmp(&p->eth_h.ether_shost, hwa2, ETHER_ADDR_LEN) == 0)
 		return PD_2TO1;
 	else
 		return PD_OTHER;
@@ -50,13 +50,13 @@ forwardpacket(struct ip_packet * p, size_t p_size)
 	pkt_dir_t pd = get_pkt_dir(p);
 
 	// set packet source mac address as host mac address
-	memcpy(&p->eth_h.ether_shost, hwa_host, ETH_ALEN);
+	memcpy(&p->eth_h.ether_shost, hwa_host, ETHER_ADDR_LEN);
 
 	// set correct packet dest mac address
 	if(pd == PD_1TO2)
-		memcpy(&p->eth_h.ether_dhost, hwa2, ETH_ALEN);
+		memcpy(&p->eth_h.ether_dhost, hwa2, ETHER_ADDR_LEN);
 	else if(pd == PD_2TO1)
-		memcpy(&p->eth_h.ether_dhost, hwa1, ETH_ALEN);
+		memcpy(&p->eth_h.ether_dhost, hwa1, ETHER_ADDR_LEN);
 	else {
 		perror("packet direction error in forwardpacket\n");
 		return;
@@ -87,12 +87,12 @@ processbuf(uint8_t * buf, size_t numbytes)
 	}
 
 	// ignore if packet mac address is not attackers
-	if(memcmp(ep->dest, hwa_host, ETH_ALEN) != 0){
+	if(memcmp(ep->dest, hwa_host, ETHER_ADDR_LEN) != 0){
 		return;
 	}
 	// ignore if packet is not from one of the victim
-	if(memcmp(ep->source, hwa1, ETH_ALEN) != 0 &&
-	   memcmp(ep->source, hwa2, ETH_ALEN) != 0){
+	if(memcmp(ep->source, hwa1, ETHER_ADDR_LEN) != 0 &&
+	   memcmp(ep->source, hwa2, ETHER_ADDR_LEN) != 0){
 		return;
 	}
 
