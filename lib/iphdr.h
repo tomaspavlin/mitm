@@ -3,7 +3,7 @@
 
 #ifdef __APPLE__
 
-#include <netinet/iphdr.h>
+#include <netinet/ip.h>
 
 
 struct iphdr
