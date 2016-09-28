@@ -10,6 +10,12 @@
 #include <netinet/if_ether.h>
 #include "lib/iphdr.h"
 
+/* partability to OSX */
+#ifndef AF_PACKET
+  #define AF_PACKET PF_NDRV
+#endif
+
+
 
 #include "utils.h"
 
