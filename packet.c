@@ -85,11 +85,9 @@ dprintpkt_s(int fd, const struct ip_packet * p, size_t p_size)
 void
 dprintpkt_l(int fd, const struct ip_packet * p, size_t p_size)
 {
-	void
-	w(char * s)
-	{
-		write(fd, s, strlen(s));
-	}
+
+#define w(s) write(fd, s, strlen(s))
+
 	
 	/* write short info */
 	dprintpkt_s(fd, p, p_size);
