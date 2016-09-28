@@ -20,8 +20,8 @@ typedef enum {PBF_HEX, PBF_CHAR} pb_format_t;
 
 struct eth_packet
 {
-	uint8_t dest[ETH_ALEN];
-	uint8_t source[ETH_ALEN];
+	uint8_t dest[ETHER_ADDR_LEN];
+	uint8_t source[ETHER_ADDR_LEN];
 	uint16_t type;
 };
 

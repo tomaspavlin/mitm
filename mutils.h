@@ -25,10 +25,10 @@ char * hwa2_str;
 
 /* addresses binary representation */
 uint8_t ipa1[4];
-uint8_t hwa1[ETH_ALEN];
+uint8_t hwa1[ETHER_ADDR_LEN];
 uint8_t ipa2[4];
-uint8_t hwa2[ETH_ALEN];
-uint8_t hwa_host[ETH_ALEN];
+uint8_t hwa2[ETHER_ADDR_LEN];
+uint8_t hwa_host[ETHER_ADDR_LEN];
 
 /* address for sendto */
 struct sockaddr_ll sa;

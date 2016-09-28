@@ -21,7 +21,7 @@ getsockaddr(char * ifname)
 	ret.sll_ifindex = if_nametoindex(ifname);
   	ret.sll_family = AF_PACKET;
 
-  	ret.sll_halen = htons(ETH_ALEN);
+  	ret.sll_halen = htons(ETHER_ADDR_LEN);
 
   	return ret;
 }
@@ -46,7 +46,7 @@ gethwaddr(uint8_t * hwaddr, char * ifname)
 
 	close(s);
 
-	memcpy(hwaddr, buf.ifr_hwaddr.sa_data, ETH_ALEN);
+	memcpy(hwaddr, buf.ifr_hwaddr.sa_data, ETHER_ADDR_LEN);
 }
 
 /* 
