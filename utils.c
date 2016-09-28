@@ -9,12 +9,7 @@ bool
 parse_hwa(uint8_t * buf, char * str)
 {
 	int n = sscanf(str, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
-					&buf[0],
-					&buf[1],
-					&buf[2],
-					&buf[3],
-					&buf[4],
-					&buf[5]);
+		&buf[0], &buf[1], &buf[2], &buf[3],&buf[4],&buf[5]);
 
 	return n == 6;
 }
@@ -24,10 +19,7 @@ bool
 parse_ipa(uint8_t * buf, char * str)
 {
 	int n = sscanf(str, "%hhu.%hhu.%hhu.%hhu",
-					&buf[0],
-					&buf[1],
-					&buf[2],
-					&buf[3]);
+		&buf[0], &buf[1], &buf[2], &buf[3]);
 
 	return n == 4;
 }

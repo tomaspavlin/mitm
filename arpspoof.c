@@ -23,6 +23,8 @@ int s; // socket
 struct arp_packet packet1_cl; // unpoisoning arp packet1
 struct arp_packet packet2_cl; // unpoisoning arp packet2
 
+sig_atomic_t clean = 0; // if ^C pressed, this is set to 1 and cleanup function is called then
+
 /* send packet p and write message to standard output */
 void
 sendpacket(struct arp_packet * p)
@@ -43,8 +45,18 @@ sendpacket(struct arp_packet * p)
     sendto(s, p, sizeof(struct arp_packet), 0, (struct sockaddr *) &sa, SOCKADDR_SIZE);
 }
 
+
 /* 
  * this method triggers on SIGINT and
+ * set make that cleanup method will
+ * trigger soon
+ */
+void sighandler()
+{
+  clean = 1;
+}
+
+/* 
  * sends 5 unpoisoning packets for both
  * targets, close socket and exit program
  */
@@ -96,7 +108,7 @@ main(int argc, char ** argv)
   }
 
   // send unpoisoning packets after pressing ^C
-  signal(SIGINT, cleanup);
+  signal(SIGINT, sighandler);
 
   // start sending packets
   puts("Poisoning targets with ARP packets");
@@ -104,6 +116,9 @@ main(int argc, char ** argv)
     sendpacket(&packet1);
     sendpacket(&packet2);
     sleep(SLEEP_DELAY);
+
+    if(clean)
+      cleanup();
   }
 
   return 0;

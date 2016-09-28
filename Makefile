@@ -1,5 +1,5 @@
 OBJ = utils.o arp.o packet.o mutils.o packet_tcp.o
-DEPS = *.h
+DEPS = utils.h arp.h packet.h mutils.h packet_tcp.h
 
 CFLAGS += -Wall -g
 
@@ -15,4 +15,4 @@ sniffer: sniffer.o $(OBJ)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 clean:
-	rm -f ./*.o
+	-rm -f arpspoof sniffer ./*.o
