@@ -188,7 +188,7 @@ gethwaddr(uint8_t * hwaddr, const char * ifname)
 }
 
 rawsock_t
-_rawsocket(const car * ifname)
+_rawsocket(const char * ifname)
 {
 	int fd =  open("/dev/bpf", O_RDWR);//|O_APPEND|O_CREAT)
 
@@ -269,7 +269,7 @@ rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 
 	if(ret > 0)
 		printf("Sock len: %d\n", ret);
-	
+
 	return ret;
 }
 
