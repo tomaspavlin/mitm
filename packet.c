@@ -1,5 +1,10 @@
 //#include <netpacket/packet.h>
 //#define _GNU_SOURCE // HACK
+
+/* due to dprintf function in BSD systems */
+#define _WITH_DPRINTF
+#include <stdio.h>
+
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
