@@ -189,28 +189,6 @@ rawclose(rawsock_t rs)
 
 #include <net/if_dl.h>
 
-int macaddr(uint8_t * macaddr, const char *ifname) {
-    struct ifaddrs *ifap, *ifaptr;
-    unsigned char *ptr;
-
-    if (getifaddrs(&ifap) == 0) {
-        for(ifaptr = ifap; ifaptr != NULL; ifaptr = (ifaptr)->ifa_next) {
-            if (!strcmp((ifaptr)->ifa_name, ifname) && (((ifaptr)->ifa_addr)->sa_family == AF_LINK)) {
-                ptr = (unsigned char *)LLADDR((struct sockaddr_dl *)(ifaptr)->ifa_addr);
-                //sprintf(macaddrstr, "%02x:%02x:%02x:%02x:%02x:%02x",
-                //                    *ptr, *(ptr+1), *(ptr+2), *(ptr+3), *(ptr+4), *(ptr+5));
-                
-                memcpy(macaddr, ptr, ETHER_ADDR_LEN);
-                break;
-            }
-        }
-        freeifaddrs(ifap);
-        return ifaptr != NULL;
-    } else {
-        return 0;
-    }
-}
-
 /* 
  * get local hardware address (MAC) of interface ifname
  * and save it to hwaddr buffer
@@ -218,7 +196,24 @@ int macaddr(uint8_t * macaddr, const char *ifname) {
 void
 gethwaddr(uint8_t * hwaddr, const char * ifname)
 {
-	macaddr(hwaddr, ifname);
+	struct ifaddrs *ifap, *ifaptr;
+    unsigned char *ptr;
+
+    if (getifaddrs(&ifap) == 0) {
+        for(ifaptr = ifap; ifaptr != NULL; ifaptr = (ifaptr)->ifa_next) {
+            if (!strcmp((ifaptr)->ifa_name, ifname) && (((ifaptr)->ifa_addr)->sa_family == AF_LINK)) {
+            	q
+                ptr = (unsigned char *)LLADDR((struct sockaddr_dl *)(ifaptr)->ifa_addr);
+                
+                memcpy(hwaddr, ptr, ETHER_ADDR_LEN);
+                break;
+            }
+        }
+        freeifaddrs(ifap);
+
+    } else {
+    	memset(hwaddr, 0, ETHER_ADDR_LEN);
+    }
 }
 
 /*
@@ -230,8 +225,34 @@ rawsock_t
 rawsocket_arp(const char * ifname)
 {
 
-	rawsock_t ret = 0;
-	return ret;
+	int fd =  open("/dev/bpf", O_RDWR);//|O_APPEND|O_CREAT)
+
+	if(fd < 0){
+		perror("/dev/bpf open");
+		exit(1);
+	}
+
+	struct ifreq ifr;
+	strlcpy(ifr.ifr_name, ifname, sizeof(ifr.ifr_name)-1);
+
+	if(ioctl(fd, BIOCSETIF, &ifr) < 0){
+		perror("BIOCSETIF");
+		exit(1);
+	}
+
+    /* Set header complete mode */
+    //if(ioctl(fd, BIOCSHDRCMPLT, &enable) < 0)
+    //    return -1;
+
+    /* Monitor packets sent from our interface */
+    //if(ioctl(fd, BIOCSSEESENT, &enable) < 0)
+    //    err(EXIT_FAILURE, "BIOCSEESENT");
+
+    /* Return immediately when a packet received */
+    //if(ioctl(fd, BIOCIMMEDIATE, &enable) < 0)
+    //    err(EXIT_FAILURE, "BIOCIMMEDIATE");
+
+
 }
 
 /*
@@ -253,7 +274,10 @@ rawsocket_ip(const char * ifname)
 void
 rawsend(rawsock_t rs, const void * p, size_t p_size)
 {
-
+	if(write(rs, p, p_size) < 0){
+		perror("rawsend");
+		exit(1);
+	}
 }
 
 /*
