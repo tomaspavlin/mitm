@@ -277,6 +277,8 @@ rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 
 	if(ret > 0)
 		printf("Sock len: %d\n", ret);
+	else
+		printf(".");
 
 	return ret;
 }
