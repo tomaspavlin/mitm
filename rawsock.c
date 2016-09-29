@@ -186,7 +186,7 @@ rawclose(rawsock_t rs)
 /* ################################  BSD  ############################# */
 #elif defined(BSD)
 
-int macaddr(uint8_t * macaddr, char *ifname) {
+int macaddr(uint8_t * macaddr, const char *ifname) {
     struct ifaddrs *ifap, *ifaptr;
     unsigned char *ptr;
 
