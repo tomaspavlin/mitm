@@ -12,7 +12,7 @@
 #include "mutils.h"
 
 /* packet buffer size */
-#define BUF_SIZE ETH_FRAME_LEN
+#define BUF_SIZE 1500 //ETH_FRAME_LEN (commented because of the BSD compatibility)
 /* buffer for replacement pairs size */
 #define REPL_BUF_SIZE 64
 
