@@ -20,6 +20,7 @@
 #include <net/if.h>
 #include <netinet/ip.h>
 #include <netinet/if_ether.h>
+#include <ifaddrs.h>
 
 #include "lib/packet.h"
 

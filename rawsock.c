@@ -30,8 +30,38 @@ gethwaddr(uint8_t * hwaddr, const char * ifname)
 	close(s);
 
 	memcpy(hwaddr, buf.ifr_hwaddr.sa_data, ETHER_ADDR_LEN);
+
 	//#endif
+
+	/*struct ifaddrs * ifa, ifa0;
+
+	// get the right ifaddr
+	getifaddrs(&ifa);
+	ifa0 = ifa;
+
+	while(ifa){
+		if(strcmp(ifa->ifa_name, ifname) == 0){
+			break;
+		}
+		ifa = ifa->ifa_next;
+	}
+
+	// if if found
+	if(ifa){
+		struct sockaddr * sa = ifa->ifa_addr;
+		//memcpy(hwaddr, ifa->, ETHER_ADDR_LEN);
+		..
+	}else{ // if not found
+		memset(hwaddr, 0, ETHER_ADDR_LEN);
+	}
+
+
+	freeifaddrs(&ifa0);*/
+	//macaddr(hwaddr, ifname);
+
 }
+
+
 
 /*
  * returns sockaddr_ll structure made
@@ -156,6 +186,28 @@ rawclose(rawsock_t rs)
 /* ################################  BSD  ############################# */
 #elif defined(BSD)
 
+int macaddr(uint8_t * macaddr, char *ifname) {
+    struct ifaddrs *ifap, *ifaptr;
+    unsigned char *ptr;
+
+    if (getifaddrs(&ifap) == 0) {
+        for(ifaptr = ifap; ifaptr != NULL; ifaptr = (ifaptr)->ifa_next) {
+            if (!strcmp((ifaptr)->ifa_name, ifname) && (((ifaptr)->ifa_addr)->sa_family == AF_LINK)) {
+                ptr = (unsigned char *)LLADDR((struct sockaddr_dl *)(ifaptr)->ifa_addr);
+                //sprintf(macaddrstr, "%02x:%02x:%02x:%02x:%02x:%02x",
+                //                    *ptr, *(ptr+1), *(ptr+2), *(ptr+3), *(ptr+4), *(ptr+5));
+                
+                memcpy(macaddr, ptr, ETHER_ADDR_LEN);
+                break;
+            }
+        }
+        freeifaddrs(ifap);
+        return ifaptr != NULL;
+    } else {
+        return 0;
+    }
+}
+
 /* 
  * get local hardware address (MAC) of interface ifname
  * and save it to hwaddr buffer
@@ -163,7 +215,7 @@ rawclose(rawsock_t rs)
 void
 gethwaddr(uint8_t * hwaddr, const char * ifname)
 {
-
+	macaddr(hwaddr, ifname);
 }
 
 /*

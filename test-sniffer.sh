@@ -3,7 +3,7 @@
 # is happening.
 
 a="./sniffer \
-wlan0 \
+run0 \
 192.168.43.1 \
 b4:3a:28:63:e6:ab \
 192.168.43.108 \
@@ -18,7 +18,7 @@ b4:3a:28:63:e6:ab \
 # them so the victims do not know that someting is happening.
 
 b="./sniffer \
-wlan0 \
+run0 \
 192.168.43.1 \
 b4:3a:28:63:e6:ab \
 192.168.43.108 \
@@ -36,7 +36,7 @@ $b
 # do not know that someting is happening.
 
 c="./sniffer \
-wlan0 \
+run0 \
 192.168.43.1 \
 b4:3a:28:63:e6:ab \
 192.168.43.108 \
