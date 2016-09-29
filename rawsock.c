@@ -188,6 +188,7 @@ rawclose(rawsock_t rs)
 
 
 #include <net/if_dl.h>
+#include <net/bpf.h>
 
 /* 
  * get local hardware address (MAC) of interface ifname
@@ -202,7 +203,7 @@ gethwaddr(uint8_t * hwaddr, const char * ifname)
     if (getifaddrs(&ifap) == 0) {
         for(ifaptr = ifap; ifaptr != NULL; ifaptr = (ifaptr)->ifa_next) {
             if (!strcmp((ifaptr)->ifa_name, ifname) && (((ifaptr)->ifa_addr)->sa_family == AF_LINK)) {
-            	q
+            	
                 ptr = (unsigned char *)LLADDR((struct sockaddr_dl *)(ifaptr)->ifa_addr);
                 
                 memcpy(hwaddr, ptr, ETHER_ADDR_LEN);
