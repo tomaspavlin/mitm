@@ -290,7 +290,13 @@ rawsend(rawsock_t rs, const void * p, size_t p_size)
 ssize_t
 rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 {
-	return 0;
+	int ret;
+	if(ret = read(rs, buf, bufsize) < 0){
+		perror("rawrecv");
+		exit(1);
+	}
+
+	return ret;
 }
 
 /*
@@ -300,9 +306,11 @@ rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 void
 rawclose(rawsock_t rs)
 {
-
+	close(rs){
+		perror("rawclose");
+		exit(1);
+	}
 }
-
 
 
 #else
