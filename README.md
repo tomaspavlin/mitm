@@ -154,3 +154,4 @@ RESTRICTIONS
 Because of that ARP protocol works for IPv4 packets only, program can not work with IPv6 packets.
 
 The arpspoof is working on both systems properly but the sniffer program is not debugged on BSD yet.
+
