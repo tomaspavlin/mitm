@@ -261,8 +261,15 @@ rawsend(rawsock_t rs, const void * p, size_t p_size)
 ssize_t
 rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 {
+
+	// request buffer length
+	if( ioctl( bpf, BIOCGBLEN, &buf_len ) == -1 )
+		perror("BIOCGBLEN ioctl rawrecv");
+		exit(1);
+	}
+
 	int ret;
-	if((ret = read(rs, buf, bufsize)) < 0){
+	if((ret = read(rs, buf, buf_len)) < 0){
 		perror("rawrecv");
 		exit(1);
 	}
