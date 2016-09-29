@@ -8,7 +8,7 @@ wlan0 \
 b4:3a:28:63:e6:ab \
 192.168.43.108 \
 54:e6:fc:8e:b9:99"
-#sudo $a
+#$a
 
 
 
@@ -25,7 +25,7 @@ b4:3a:28:63:e6:ab \
 54:e6:fc:8e:b9:99 \
 - \
 /dev/stdout"
-sudo $b
+$b
 
 
 
@@ -43,7 +43,7 @@ b4:3a:28:63:e6:ab \
 54:e6:fc:8e:b9:99 \
 replace.txt \
 log.txt"
-#sudo $c
+#$c
 
 
 
