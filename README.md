@@ -129,6 +129,15 @@ Program consists of these source files:
 	Entry point to sniffer program.
 - `utils.c`
 	Parsing addresses, converting addresses to string,
+- `rawsock.c`
+	System independent interface for using raw sockets (so they could work
+	with ethernet header as well).
+	Since there are different methods to use raw sockets on each system,
+	it works absolutely different way for each system.
+	For Linux, it uses RAW sockets with AF_PACKET address family, on BSD, there is no
+	AF_PACKET address family, so it uses **BPF** (so no sockets actually).
+- `lib\`
+	A few header files from Linux system, so they could be used for BSD as well.
 
 For more info, see the comments in the source files.
 

@@ -31,37 +31,7 @@ gethwaddr(uint8_t * hwaddr, const char * ifname)
 
 	memcpy(hwaddr, buf.ifr_hwaddr.sa_data, ETHER_ADDR_LEN);
 
-	//#endif
-
-	/*struct ifaddrs * ifa, ifa0;
-
-	// get the right ifaddr
-	getifaddrs(&ifa);
-	ifa0 = ifa;
-
-	while(ifa){
-		if(strcmp(ifa->ifa_name, ifname) == 0){
-			break;
-		}
-		ifa = ifa->ifa_next;
-	}
-
-	// if if found
-	if(ifa){
-		struct sockaddr * sa = ifa->ifa_addr;
-		//memcpy(hwaddr, ifa->, ETHER_ADDR_LEN);
-		..
-	}else{ // if not found
-		memset(hwaddr, 0, ETHER_ADDR_LEN);
-	}
-
-
-	freeifaddrs(&ifa0);*/
-	//macaddr(hwaddr, ifname);
-
 }
-
-
 
 /*
  * returns sockaddr_ll structure made
@@ -217,15 +187,9 @@ gethwaddr(uint8_t * hwaddr, const char * ifname)
     }
 }
 
-/*
- * create new raw socket for sending of 
- * arp packets. If error, print it end exit
- * the program
- */
 rawsock_t
-rawsocket_arp(const char * ifname)
+_rawsocket(const car * ifname)
 {
-
 	int fd =  open("/dev/bpf", O_RDWR);//|O_APPEND|O_CREAT)
 
 	if(fd < 0){
@@ -235,8 +199,6 @@ rawsocket_arp(const char * ifname)
 
 	struct ifreq ifr;
 	strlcpy(ifr.ifr_name, ifname, sizeof(ifr.ifr_name)-1);
-
-	printf(ifname);
 
 	if(ioctl(fd, BIOCSETIF, &ifr) < 0){
 		perror("BIOCSETIF");
@@ -257,6 +219,16 @@ rawsocket_arp(const char * ifname)
 
 	return fd;
 }
+/*
+ * create new raw socket for sending of 
+ * arp packets. If error, print it end exit
+ * the program
+ */
+rawsock_t
+rawsocket_arp(const char * ifname)
+{
+	return _rawsocket(ifname);
+}
 
 /*
  * create new raw socket for sending and recv of 
@@ -266,8 +238,7 @@ rawsocket_arp(const char * ifname)
 rawsock_t
 rawsocket_ip(const char * ifname)
 {
-	rawsock_t ret = 0;
-	return ret;
+	return _rawsocket(ifname);
 }
 
 /*
@@ -291,11 +262,14 @@ ssize_t
 rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 {
 	int ret;
-	if(ret = read(rs, buf, bufsize) < 0){
+	if((ret = read(rs, buf, bufsize)) < 0){
 		perror("rawrecv");
 		exit(1);
 	}
 
+	if(ret > 0)
+		printf("Sock len: %d\n", ret);
+	
 	return ret;
 }
 
