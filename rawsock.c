@@ -306,7 +306,7 @@ rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 void
 rawclose(rawsock_t rs)
 {
-	close(rs){
+	if(close(rs) < 0){
 		perror("rawclose");
 		exit(1);
 	}

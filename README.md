@@ -1,7 +1,7 @@
 mitm
 ===
 
-This is application written in C for Unix (debugged on Linux), that implements Man in the middle attack.
+This is application written in C for Unix, debugged on Linux and FreeBSD system, that implements Man in the middle attack.
 
 DESCRIPTION
 ---
