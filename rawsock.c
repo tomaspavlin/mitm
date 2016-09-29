@@ -264,7 +264,7 @@ rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 
 	// request buffer length
 	size_t buf_len;
-	if( ioctl( rs, BIOCGBLEN, &buf_len ) == -1 ){:
+	if( ioctl( rs, BIOCGBLEN, &buf_len ) == -1 ){
 		perror("BIOCGBLEN ioctl rawrecv");
 		exit(1);
 	}
