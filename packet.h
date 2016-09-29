@@ -15,7 +15,10 @@
 
 #include "utils.h"
 
-
+// due to BSD compatibility
+#ifndef ETH_P_IP
+#define ETH_P_IP  0x0800
+#endif
 
 typedef enum  {PD_1TO2, PD_2TO1, PD_OTHER} pkt_dir_t; // who is sending the packet
 
