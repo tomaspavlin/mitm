@@ -253,7 +253,7 @@ rawsocket_arp(const char * ifname)
     //if(ioctl(fd, BIOCIMMEDIATE, &enable) < 0)
     //    err(EXIT_FAILURE, "BIOCIMMEDIATE");
 
-
+	return fd;
 }
 
 /*
