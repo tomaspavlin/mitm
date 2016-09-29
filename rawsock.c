@@ -186,6 +186,9 @@ rawclose(rawsock_t rs)
 /* ################################  BSD  ############################# */
 #elif defined(BSD)
 
+
+#include <net/if_dl.h>
+
 int macaddr(uint8_t * macaddr, const char *ifname) {
     struct ifaddrs *ifap, *ifaptr;
     unsigned char *ptr;
