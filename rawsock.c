@@ -1,8 +1,11 @@
 #include "rawsock.h"
 
 
+/* ################################  Linux  ############################# */
+#ifdef __linux__
+
 /* 
- * get local hardware address of interface ifname
+ * get local hardware address (MAC) of interface ifname
  * and save it to hwaddr buffer
  */
 void
@@ -99,7 +102,7 @@ rawsocket_arp(const char * ifname)
 
 /*
  * create new raw socket for sending and recv of 
- * ip packets. If error, print it end exit
+ * ip packets. If error occur, print it end exit
  * the program
  */
 rawsock_t
@@ -114,6 +117,10 @@ rawsocket_ip(const char * ifname)
 	return _rsfroms(s, ifname);
 }
 
+/*
+ * sends packet p of size p_size with raw socket rs,
+ * if error occur, print it and exit program
+ */
 void
 rawsend(rawsock_t rs, const void * p, size_t p_size)
 {
@@ -123,12 +130,20 @@ rawsend(rawsock_t rs, const void * p, size_t p_size)
 	}
 }
 
+/*
+ * rect packet to buffer buf of size bufsize with raw socket rs,
+ * if error occure, print it and exit program
+ */
 ssize_t
 rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 {
 	return recv(rs.s, buf, bufsize, 0);
 }
 
+/*
+ * closes raw socket rs,
+ * if error occur, print it and exit program
+ */
 void
 rawclose(rawsock_t rs)
 {
@@ -137,3 +152,77 @@ rawclose(rawsock_t rs)
 		exit(1);
 	}
 }
+
+/* ################################  BSD  ############################# */
+#elif defined(BSD)
+
+/* 
+ * get local hardware address (MAC) of interface ifname
+ * and save it to hwaddr buffer
+ */
+void
+gethwaddr(uint8_t * hwaddr, const char * ifname)
+{
+
+}
+
+/*
+ * create new raw socket for sending of 
+ * arp packets. If error, print it end exit
+ * the program
+ */
+rawsock_t
+rawsocket_arp(const char * ifname)
+{
+
+	rawsock_t ret = 0;
+	return ret;
+}
+
+/*
+ * create new raw socket for sending and recv of 
+ * ip packets. If error occur, print it end exit
+ * the program
+ */
+rawsock_t
+rawsocket_ip(const char * ifname)
+{
+	rawsock_t ret = 0;
+	return ret;
+}
+
+/*
+ * sends packet p of size p_size with raw socket rs,
+ * if error occur, print it and exit program
+ */
+void
+rawsend(rawsock_t rs, const void * p, size_t p_size)
+{
+
+}
+
+/*
+ * rect packet to buffer buf of size bufsize with raw socket rs,
+ * if error occure, print it and exit program
+ */
+ssize_t
+rawrecv(rawsock_t rs, void * buf, size_t bufsize)
+{
+	return 0;
+}
+
+/*
+ * closes raw socket rs,
+ * if error occur, print it and exit program
+ */
+void
+rawclose(rawsock_t rs)
+{
+
+}
+
+
+
+#else
+#error Only Linux and BSD systems are supported
+#endif

@@ -25,19 +25,29 @@
 
 
 /* partability to OSX */
-#ifndef AF_PACKET
-  #define AF_PACKET PF_NDRV
-#endif
+//#ifndef AF_PACKET
+//  #define AF_PACKET PF_NDRV
+//#endif
 /* partability to OSX */
-#ifndef ETH_P_ARP
-  #define ETH_P_ARP 0x0806
-#endif
+//#ifndef ETH_P_ARP
+//  #define ETH_P_ARP 0x0806
+//#endif
+
+#ifdef __linux__
 
 typedef struct rawsock_
 {
 	int s; // socket
 	struct sockaddr_ll sockaddr; // interface addr
 } rawsock_t;
+
+#elif defined(BSD)
+
+typedef int rawsock_t;
+
+#else
+#error Only Linux and BSD systems are supported
+#endif
 
 
 void gethwaddr(uint8_t * hwaddr, const char * ifname);
