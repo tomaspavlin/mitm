@@ -34,6 +34,7 @@
 //#endif
 
 #ifdef __linux__
+#define SYS_SUPPORTED
 
 typedef struct rawsock_
 {
@@ -41,11 +42,20 @@ typedef struct rawsock_
 	struct sockaddr_ll sockaddr; // interface addr
 } rawsock_t;
 
-#elif defined(BSD)
+
+#elif defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
+#include <sys/param.h>
+#if defined(BSD)
+#define SYS_SUPPORTED
 
 typedef int rawsock_t;
 
-#else
+#endif
+#endif
+
+
+
+#ifndef SYS_SUPPORTED
 #error Only Linux and BSD systems are supported
 #endif
 
