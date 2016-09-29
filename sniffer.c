@@ -274,6 +274,7 @@ main(int argc, char ** argv)
 
   while (1) {
     // recv packet
+    printf("a");
     numbytes = rawrecv(rs, buf, BUF_SIZE); 
 
     // check, log, modify and forward packet
