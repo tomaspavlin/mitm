@@ -1,7 +1,7 @@
 #ifndef IPHDR_H_
 #define IPHDR_H_
 
-#ifdef __APPLE__
+#ifndef __linux__
 
 #include <netinet/ip.h>
 
@@ -30,4 +30,5 @@ struct iphdr
   };
 
 #endif
+
 #endif
