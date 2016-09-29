@@ -205,17 +205,28 @@ _rawsocket(const char * ifname)
 		exit(1);
 	}
 
+//int buf_len = 1;
+
+// activate immediate mode (therefore, buf_len is initially set to "1")
+//if( ioctl( bpf, BIOCIMMEDIATE, &buf_len ) == -1 )
+//    return( -1 );
+
+// request buffer length
+//if( ioctl( bpf, BIOCGBLEN, &buf_len ) == -1 )
+ //     return( -1 );
+
+	int enable = 1;
     /* Set header complete mode */
-    //if(ioctl(fd, BIOCSHDRCMPLT, &enable) < 0)
-    //    return -1;
+    if(ioctl(fd, BIOCSHDRCMPLT, &enable) < 0)
+        return -1;
 
     /* Monitor packets sent from our interface */
-    //if(ioctl(fd, BIOCSSEESENT, &enable) < 0)
-    //    err(EXIT_FAILURE, "BIOCSEESENT");
+    if(ioctl(fd, BIOCSSEESENT, &enable) < 0)
+        err(EXIT_FAILURE, "BIOCSEESENT");
 
     /* Return immediately when a packet received */
-    //if(ioctl(fd, BIOCIMMEDIATE, &enable) < 0)
-    //    err(EXIT_FAILURE, "BIOCIMMEDIATE");
+    if(ioctl(fd, BIOCIMMEDIATE, &enable) < 0)
+        err(EXIT_FAILURE, "BIOCIMMEDIATE");
 
 	return fd;
 }
@@ -261,14 +272,49 @@ rawsend(rawsock_t rs, const void * p, size_t p_size)
 ssize_t
 rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 {
-	printf("a");
+
+
+	/*int read_bytes = 0;
+
+	ethernet_frame* frame;
+	struct bpf_hdr* bpf_buf = new bpf_hdr[buf_len];
+	struct bpf_hdr* bpf_packet;
+
+	while(run_loop)
+	{
+	    memset(bpf_buf, 0, buf_len);
+
+	    if((read_bytes = read(bpf, bpf_buf, buf_len)) > 0)
+	    {
+	        int i = 0;
+
+	        // read all packets that are included in bpf_buf. BPF_WORDALIGN is used
+	        // to proceed to the next BPF packet that is available in the buffer.
+
+	        char* ptr = reinterpret_cast<char*>(bpf_buf);
+	        while(ptr < (reinterpret_cast<char*>(bpf_buf) + read_bytes))
+	        {
+	            bpf_packet = reinterpret_cast<bpf_hdr*>(ptr);
+	            frame = (ethernet_frame*)((char*) bpf_packet + bpf_packet->bh_hdrlen);
+
+	            // do something with the Ethernet frame
+	            // [...]
+
+	            ptr += BPF_WORDALIGN(bpf_packet->bh_hdrlen + bpf_packet->bh_caplen);
+	        }
+	    }
+	}*/
+
+
+
+//	printf("a");
 	// request buffer length
 	size_t buf_len;
 	if( ioctl( rs, BIOCGBLEN, &buf_len ) == -1 ){
 		perror("BIOCGBLEN ioctl rawrecv");
 		exit(1);
 	}
-printf("b");
+//printf("b");
 	int ret;
 	if((ret = read(rs, buf, buf_len)) < 0){
 		perror("rawrecv");
