@@ -10,12 +10,8 @@
 #include "utils.h"
 #include "arp.h"
 #include "packet.h"
+#include "rawsock.h"
 #include "mutils.h"
-
-/* partability to OSX */
-#ifndef ETH_P_ARP
-  #define ETH_P_ARP 0x0806
-#endif
 
 /* interval between sending the packets (in secons) */
 #define SLEEP_DELAY 1
@@ -24,7 +20,7 @@
  * send after pressig ^C to unpoison the target */
 #define UNPOISON_COUNT 5
 
-int s; // socket
+rawsock_t rs; // socket
 struct arp_packet packet1_cl; // unpoisoning arp packet1
 struct arp_packet packet2_cl; // unpoisoning arp packet2
 
@@ -47,7 +43,8 @@ sendpacket(struct arp_packet * p)
 
     // print and send
     printf("ARP reply to %s (%s): %s is at %s\n", t_ipa_str, t_hwa_str, s_ipa_str, s_hwa_str);
-    sendto(s, p, sizeof(struct arp_packet), 0, (struct sockaddr *) &sa, SOCKADDR_SIZE);
+    rawsend(rs, p, sizeof(struct arp_packet));
+
 }
 
 
@@ -76,7 +73,7 @@ cleanup()
     sleep(SLEEP_DELAY);
   }
 
-  close(s);
+  rawclose(rs);
   exit(0);
 }
 
@@ -106,11 +103,7 @@ main(int argc, char ** argv)
   packet2_cl = create_arp_packet(ipa2, hwa2, ipa1, hwa1);
 
   // initialize socket
-  s = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ARP));
-  if (s < 0){
-    perror("socket");
-    exit(1);
-  }
+  rs = rawsocket_arp(if_name);
 
   // send unpoisoning packets after pressing ^C
   signal(SIGINT, sighandler);

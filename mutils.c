@@ -21,7 +21,7 @@ uint8_t hwa2[ETHER_ADDR_LEN];
 uint8_t hwa_host[ETHER_ADDR_LEN];
 
 /* address for sendto */
-struct sockaddr_ll sa;
+//struct sockaddr_ll sa;
 
 /*
  * This method should be called only if there is
@@ -50,6 +50,6 @@ process_args(int argc, char ** argv)
   gethwaddr(hwa_host, if_name);
 
   // get sockaddr
-  sa = getsockaddr(if_name);
+  //sa = getsockaddr(if_name);
 
 }

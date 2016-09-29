@@ -16,7 +16,7 @@
 /* buffer for replacement pairs size */
 #define REPL_BUF_SIZE 64
 
-int s; // socket
+rawsock_t rs; // socket
 int lfd; // log file descriptor, -1 of log disabled
 
 /* array of replacement pairs. Even items are matches,
@@ -63,10 +63,8 @@ forwardpacket(struct ip_packet * p, size_t p_size)
 	}
 
 	// send packet
-	if(sendto(s, p, p_size, 0, (struct sockaddr *) &sa, SOCKADDR_SIZE) < 0){
-		perror("sendto error\n");
-		return;
-	}
+	rawsend(rs, p, p_size);
+
 }
 
 /* 
@@ -211,11 +209,10 @@ cleanup()
 {
   puts("Finishing up...");
 
-  if(close(s) < 0)
-    perror("closing s");
+  rawclose(rs);
 
   if(close(lfd) < 0)
-    perror("closing s");
+    perror("closing lfd");
 
   exit(0);
 }
@@ -263,32 +260,7 @@ main(int argc, char ** argv)
   }
 
   // initialize socket
-  s = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_IP));
-
-  if (s < 0){
-    perror("socket");
-    exit(1);
-  }
-
-  /* Set interface to prom mode */
-  struct ifreq opts;
-  strncpy(opts.ifr_name, if_name, IFNAMSIZ-1);
-  ioctl(s, SIOCGIFFLAGS, &opts);
-  opts.ifr_flags |= IFF_PROMISC;
-  ioctl(s, SIOCSIFFLAGS, &opts);
-
-  /* Bind to interface */
-  if (setsockopt(s, SOL_SOCKET, SO_BINDTODEVICE, if_name, IFNAMSIZ-1) == -1)  {
-    perror("SO_BINDTODEVICE");
-    cleanup();
-  }
-
-  /* Socket can be reused */
-  int so;
-  if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &so, sizeof so) == -1) {
-    perror("SO_REUSEADDR");
-    cleanup();
-  }
+  rs = rawsocket_ip(if_name);
 
   // cleanup if pressing ^C
   signal(SIGINT, cleanup);
@@ -298,7 +270,7 @@ main(int argc, char ** argv)
 
   while (1) {
     // recv packet
-    numbytes = recv(s, buf, BUF_SIZE, 0); 
+    numbytes = rawrecv(rs, buf, BUF_SIZE); 
 
     // check, log, modify and forward packet
     if(numbytes < 0) {

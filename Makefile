@@ -1,5 +1,5 @@
-OBJ = utils.o arp.o packet.o mutils.o packet_tcp.o
-DEPS = utils.h arp.h packet.h mutils.h packet_tcp.h
+OBJ = utils.o arp.o packet.o mutils.o packet_tcp.o rawsock.o
+DEPS = utils.h arp.h packet.h mutils.h packet_tcp.h rawsock.h
 
 CFLAGS += -Wall -g
 

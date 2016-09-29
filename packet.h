@@ -3,6 +3,9 @@
 
 //#include <netpacket/packet.h>
 #include "lib/packet.h"
+
+#include "rawsock.h"
+
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
 #include <net/if.h>
@@ -10,16 +13,9 @@
 #include <netinet/if_ether.h>
 #include "lib/iphdr.h"
 
-/* partability to OSX */
-#ifndef AF_PACKET
-  #define AF_PACKET PF_NDRV
-#endif
-
-
-
 #include "utils.h"
 
-#define SOCKADDR_SIZE sizeof(struct sockaddr_ll)
+
 
 typedef enum  {PD_1TO2, PD_2TO1, PD_OTHER} pkt_dir_t; // who is sending the packet
 
@@ -40,8 +36,6 @@ struct ip_packet
 
 #include "packet_tcp.h"
 
-struct sockaddr_ll getsockaddr(char * ifname);
-void gethwaddr(uint8_t * hwaddr, char * ifname);
 void dprintpkt_s(int fd, const struct ip_packet * p, size_t p_size);
 void dprintpkt_l(int fd, const struct ip_packet * p, size_t p_size);
 void dprintbuf_f(int fd, const uint8_t * buf, size_t numbytes, pb_format_t format);

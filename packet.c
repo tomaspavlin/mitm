@@ -8,52 +8,7 @@
 #include "packet.h"
 #include "packet_tcp.h"
 
-/*
- * returns sockaddr_ll structure made
- * with interface name ifname
- */
-struct sockaddr_ll
-getsockaddr(char * ifname)
-{
-	//TODO
-	struct sockaddr_ll ret;
-	memset(&ret, 0, sizeof(ret));
-	ret.sll_ifindex = if_nametoindex(ifname);
-  	ret.sll_family = AF_PACKET;
-
-  	ret.sll_halen = htons(ETHER_ADDR_LEN);
-
-  	return ret;
-}
-
-/* 
- * get local hardware address of interface ifname
- * and save it to hwaddr buffer
- */
-void
-gethwaddr(uint8_t * hwaddr, char * ifname)
-{
-
-	// BRUTAL HACK
-#ifndef __APPLE__
-	int s;
-	struct ifreq buf;
-
-	s = socket(PF_INET, SOCK_DGRAM, 0);
-	strcpy(buf.ifr_name, ifname);
-
-
-	if(ioctl(s, SIOCGIFHWADDR, &buf) < 0){
-		perror("ioctl");
-		exit(1);
-	}
-
-
-	close(s);
-
-	memcpy(hwaddr, buf.ifr_hwaddr.sa_data, ETHER_ADDR_LEN);
-#endif
-}
+#include "rawsock.h"
 
 /* 
  * write short packet info into fd
