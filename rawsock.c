@@ -227,8 +227,8 @@ _rawsocket(const char * ifname)
        perror("BIOCSHDRCMPLT");
 
     /* Monitor packets sent from our interface */
-    if(ioctl(fd, BIOCSSEESENT, &enable) < 0)
-        perror("BIOCSSEESENT");
+    //if(ioctl(fd, BIOCSSEESENT, &enable) < 0)
+    //    perror("BIOCSSEESENT");
 
     /* Return immediately when a packet received */
     if(ioctl(fd, BIOCIMMEDIATE, &enable) < 0)
