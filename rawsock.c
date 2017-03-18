@@ -224,11 +224,15 @@ _rawsocket(const char * ifname)
     if(ioctl(fd, BIOCIMMEDIATE, &enable) < 0)
         perror("BIOCIMMEDIATE");
 
-	/*// request buffer length
-	if( ioctl( bpf, BIOCGBLEN, &rawpacket_maxlen ) == -1 )
+	// request buffer length
+	size_t readlen = 0;
+	if( ioctl( bpf, BIOCGBLEN, &readlen ) == -1 )
 	    perror("BIOCGBLEN");
+	else {
+		printf("PAcket req len: %d\n", readlen);
+	}
 
-	rawpacket_buf = malloc(rawpacket_maxlen);*/
+	/*rawpacket_buf = malloc(rawpacket_maxlen);*/
 
 	return fd;
 }
