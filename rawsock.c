@@ -195,7 +195,7 @@ gethwaddr(uint8_t * hwaddr, const char * ifname)
 rawsock_t
 _rawsocket(const char * ifname)
 {
-	int fd =  open("/dev/bpf", O_RDWR);//|O_APPEND|O_CREAT)
+	int fd =  open("/dev/bpf", O_RDWR);
 
 	if(fd < 0){
 		perror("/dev/bpf open");
@@ -211,10 +211,6 @@ _rawsocket(const char * ifname)
 	if( ioctl(fd, BIOCSBLEN, &readlen ) == -1 )
 	    perror("BIOCSBLEN");
 	
-	printf("Packet req len: %zu\n", readlen);
-	
-
-
 	if(ioctl(fd, BIOCSETIF, &ifr) < 0){
 		perror("BIOCSETIF");
 		exit(1);
@@ -235,10 +231,6 @@ _rawsocket(const char * ifname)
     /* Return immediately when a packet received */
     if(ioctl(fd, BIOCIMMEDIATE, &one) < 0)
         perror("BIOCIMMEDIATE");
-
-	
-
-	/*rawpacket_buf = malloc(rawpacket_maxlen);*/
 
 	return fd;
 }
@@ -298,8 +290,6 @@ rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 
 	}
 	else {
-		//printf(".\n");
-		//fflush(stdout);
 		return 0;
 	}
 }

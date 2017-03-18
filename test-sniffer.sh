@@ -42,6 +42,3 @@ em0 \
 replace.txt \
 /dev/stdout"
 $c
-
-
-

@@ -16,6 +16,7 @@
 #include "mutils.h"
 
 /* packet buffer size */
+// HACK
 #define BUF_SIZE 1540 //ETH_FRAME_LEN (commented because of the BSD compatibility) 1500 + 26 (bpf header) + 14 (etd header)
 /* buffer for replacement pairs size */
 #define REPL_BUF_SIZE 64
