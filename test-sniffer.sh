@@ -23,7 +23,7 @@ em0 \
 00:50:56:e0:44:61 \
 - \
 /dev/stdout"
-$b
+#$b
 
 
 
@@ -41,7 +41,7 @@ b4:3a:28:63:e6:ab \
 54:e6:fc:8e:b9:99 \
 replace.txt \
 log.txt"
-#$c
+$c
 
 
 
