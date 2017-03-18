@@ -205,6 +205,16 @@ _rawsocket(const char * ifname)
 	struct ifreq ifr;
 	strlcpy(ifr.ifr_name, ifname, sizeof(ifr.ifr_name)-1);
 
+
+	// set buffer length
+	size_t readlen = BUF_SIZE;
+	if( ioctl(fd, BIOCSBLEN, &readlen ) == -1 )
+	    perror("BIOCSBLEN");
+	
+	printf("PAcket req len: %zu\n", readlen);
+	
+
+
 	if(ioctl(fd, BIOCSETIF, &ifr) < 0){
 		perror("BIOCSETIF");
 		exit(1);
@@ -224,13 +234,7 @@ _rawsocket(const char * ifname)
     if(ioctl(fd, BIOCIMMEDIATE, &enable) < 0)
         perror("BIOCIMMEDIATE");
 
-	// set buffer length
-	size_t readlen = BUF_SIZE;
-	if( ioctl(fd, BIOCSBLEN, &readlen ) == -1 )
-	    perror("BIOCSBLEN");
-	else {
-		printf("PAcket req len: %zu\n", readlen);
-	}
+	
 
 	/*rawpacket_buf = malloc(rawpacket_maxlen);*/
 
