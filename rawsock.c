@@ -211,7 +211,7 @@ _rawsocket(const char * ifname)
 	if( ioctl(fd, BIOCSBLEN, &readlen ) == -1 )
 	    perror("BIOCSBLEN");
 	
-	printf("PAcket req len: %zu\n", readlen);
+	//printf("PAcket req len: %zu\n", readlen);
 	
 
 
@@ -289,10 +289,10 @@ rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 		exit(1);
 	}
 
-	/*if(ret > 0)
+	if(ret > 0)
 		printf("Sock len: %d\n", ret);
 	else
-		printf(".");*/
+		printf(".");
 
 	return ret;
 }
