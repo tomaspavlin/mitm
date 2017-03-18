@@ -227,8 +227,8 @@ _rawsocket(const char * ifname)
        perror("BIOCSHDRCMPLT");
 
     /* Monitor packets sent from our interface */
-    //if(ioctl(fd, BIOCSSEESENT, &enable) < 0)
-    //    perror("BIOCSSEESENT");
+    if(ioctl(fd, BIOCSSEESENT, &enable) < 0)
+        perror("BIOCSSEESENT");
 
     /* Return immediately when a packet received */
     if(ioctl(fd, BIOCIMMEDIATE, &enable) < 0)
@@ -282,7 +282,7 @@ rawsend(rawsock_t rs, const void * p, size_t p_size)
 ssize_t
 rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 {
-
+	printf("-");
 	int ret;
 	if((ret = read(rs, buf, bufsize)) < 0){
 		perror("rawrecv");
