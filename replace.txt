@@ -1,11 +1,9 @@
-10
+8
 Accept-Encoding: gzip, deflate, sdch
 Accept-Encoding: identity           
 apple
 linux
 Apple
 Linux
-Simon
-Debil
-background:#FFF
-background:#F22
+iDNES.cz
+INJECTED
