@@ -85,16 +85,19 @@ processbuf(uint8_t * buf, size_t numbytes)
 
 	// ignore if it is not ip packet
 	if(ep->type != htons(ETH_P_IP)){
+    printf("Not IP packet\n");
 		return;
 	}
 
 	// ignore if packet mac address is not attackers
 	if(memcmp(ep->dest, hwa_host, ETHER_ADDR_LEN) != 0){
+    printf("Not attackers MAC\n");
 		return;
 	}
 	// ignore if packet is not from one of the victim
 	if(memcmp(ep->source, hwa1, ETHER_ADDR_LEN) != 0 &&
 	   memcmp(ep->source, hwa2, ETHER_ADDR_LEN) != 0){
+    printf("Not packet from victim\n");
 		return;
 	}
 
