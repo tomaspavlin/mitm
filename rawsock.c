@@ -221,17 +221,19 @@ _rawsocket(const char * ifname)
 	}
 
 
-	int enable = 1;
+	int one = 1;
+	int zero = 0;
+
     /* Set header complete mode */
-    if(ioctl(fd, BIOCSHDRCMPLT, &enable) < 0)
+    if(ioctl(fd, BIOCSHDRCMPLT, &one) < 0)
        perror("BIOCSHDRCMPLT");
 
     /* Monitor packets sent from our interface */
-    if(ioctl(fd, BIOCSSEESENT, &enable) < 0)
+    if(ioctl(fd, BIOCSSEESENT, &zero) < 0)
         perror("BIOCSSEESENT");
 
     /* Return immediately when a packet received */
-    if(ioctl(fd, BIOCIMMEDIATE, &enable) < 0)
+    if(ioctl(fd, BIOCIMMEDIATE, &one) < 0)
         perror("BIOCIMMEDIATE");
 
 	
