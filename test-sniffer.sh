@@ -34,11 +34,11 @@ em0 \
 # do not know that someting is happening.
 
 c="./sniffer \
-wlan0 \
-192.168.43.1 \
-b4:3a:28:63:e6:ab \
-192.168.43.108 \
-54:e6:fc:8e:b9:99 \
+em0 \
+192.168.204.135 \
+00:50:56:a4:0e:55 \
+192.168.204.2 \
+00:50:56:e0:44:61 \
 replace.txt \
 log.txt"
 $c
