@@ -282,7 +282,9 @@ rawsend(rawsock_t rs, const void * p, size_t p_size)
 ssize_t
 rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 {
-
+	printf(",\n");
+	fflush(stdout);
+	
 	int ret;
 	if((ret = read(rs, buf, bufsize)) < 0){
 		perror("rawrecv");
