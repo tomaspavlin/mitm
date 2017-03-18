@@ -292,7 +292,7 @@ rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 
 	if(ret > 0){
 		printf("Sock len: %d\n", ret);
-		printf("Hdr len: %d\n", (struct bpf_hdr *)buf.bh_hdrlen);
+		printf("Hdr len: %d\n", ((struct bpf_hdr *)buf).bh_hdrlen);
 
 	}
 	else {
