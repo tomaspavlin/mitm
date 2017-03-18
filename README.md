@@ -34,7 +34,7 @@ Both programs needs the root permissions.
 
 Run program *arpspoof* with these parameters:
 
-	sudo ./arpspoof <interface> <target1-ip> <target1-mac> <target2-ip> <target2-mac>
+	$ sudo ./arpspoof <interface> <target1-ip> <target1-mac> <target2-ip> <target2-mac>
 
 - `<interface>`
 	Network interface of the attacker that is connected to the same network as the victims.
@@ -54,7 +54,8 @@ packets automatically by typing `echo 0 > /proc/sys/net/ipv4/ip_forward`.
 
 Run program *sniffer* with these parameters:
 
-	sudo ./sniffer <interface> <target1-ip> <target1-mac> <target2-ip> <target2-mac> [<replacement-file> [<log-file>]]
+	$ sudo ./sniffer <interface> <target1-ip> <target1-mac> <target2-ip> <target2-mac> \
+		[<replacement-file> [<log-file>]]
 
 The first 5 arguments should have set the same value as the the 5 arguments of the *arpspoof* program.
 
@@ -84,7 +85,7 @@ The first 5 arguments should have set the same value as the the 5 arguments of t
 	Most of the http servers compress the packet data so they are unreadable for the sniffer then. To stop the compressing, it is very useful to add these *find and replace* lines to your replacement file (note that the second line ends with spaces so that both lines has the same length):
 	```
 	Accept-Encoding: gzip, deflate, sdch
-		Accept-Encoding: identity           
+	Accept-Encoding: identity           
 	```
 	If you do not need to inject the packets but still need to provide the following argument, use *-* instead of the replacement file path.
 
