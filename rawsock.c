@@ -290,17 +290,20 @@ rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 		exit(1);
 	}
 
-	if(ret > 0){
-		printf("Sock len: %d\n", ret);
-		printf("Hdr len: %d\n", ((struct bpf_hdr *)buf)->bh_hdrlen);
+	short hdrlen = ((struct bpf_hdr *)buf)->bh_hdrlen;
+
+	if(ret > hdrlen){
+		//printf("Sock len: %d\n", ret);
+		//printf("Hdr len: %d\n", ((struct bpf_hdr *)buf)->bh_hdrlen);
+		memcpy(buf, buf + hdrlen, ret - hdrlen);
+		return ret - hdrlen;
 
 	}
 	else {
 		printf(".\n");
 		fflush(stdout);
+		reeturn 0;
 	}
-
-	return ret;
 }
 
 /*
