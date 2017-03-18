@@ -226,7 +226,7 @@ _rawsocket(const char * ifname)
 
 	// request buffer length
 	size_t readlen = 0;
-	if( ioctl( bpf, BIOCGBLEN, &readlen ) == -1 )
+	if( ioctl(fd, BIOCGBLEN, &readlen ) == -1 )
 	    perror("BIOCGBLEN");
 	else {
 		printf("PAcket req len: %d\n", readlen);
