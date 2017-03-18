@@ -211,7 +211,7 @@ _rawsocket(const char * ifname)
 	if( ioctl(fd, BIOCSBLEN, &readlen ) == -1 )
 	    perror("BIOCSBLEN");
 	
-	//printf("PAcket req len: %zu\n", readlen);
+	printf("Packet req len: %zu\n", readlen);
 	
 
 
