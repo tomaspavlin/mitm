@@ -51,6 +51,7 @@ typedef struct rawsock_
 
 // HACK, has to be equal as in sniffer.c
 #define BUF_SIZE 1500
+#include <net/bpf.h>
 
 typedef int rawsock_t;
 
