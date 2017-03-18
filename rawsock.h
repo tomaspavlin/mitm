@@ -50,7 +50,7 @@ typedef struct rawsock_
 #define SYS_SUPPORTED
 
 // HACK, has to be equal as in sniffer.c
-#define BUF_SIZE 1500
+#define BUF_SIZE 15000
 #include <net/bpf.h>
 
 typedef int rawsock_t;
