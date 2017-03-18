@@ -302,7 +302,7 @@ rawrecv(rawsock_t rs, void * buf, size_t bufsize)
 	else {
 		printf(".\n");
 		fflush(stdout);
-		reeturn 0;
+		return 0;
 	}
 }
 
