@@ -49,6 +49,9 @@ typedef struct rawsock_
 #if defined(BSD)
 #define SYS_SUPPORTED
 
+// HACK, has to be equal as in sniffer.c
+#define BUF_SIZE 1500
+
 typedef int rawsock_t;
 
 #endif
