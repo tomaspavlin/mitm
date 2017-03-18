@@ -1,7 +1,7 @@
 mitm
 ===
 
-This is application written in C for Unix, debugged on Linux and FreeBSD system, that implements Man in the middle attack.
+This is application written in C for Unix, working on Linux and FreeBSD system, that implements Man in the middle attack.
 
 DESCRIPTION
 ---
@@ -135,7 +135,7 @@ Program consists of these source files:
 	Since there are different methods to use raw sockets on each system,
 	it works absolutely different way for each system.
 	For Linux, it uses RAW sockets with AF_PACKET address family, on BSD, there is no
-	AF_PACKET address family, so it uses **BPF** (so no sockets actually).
+	AF_PACKET address family, therefore instead of sockets it uses **Berkeley Packet Filter**.
 - `lib\`
 	A few header files from Linux system, so they could be used for BSD as well.
 
@@ -148,9 +148,11 @@ To test the program, you need two victims (for instance wifi router and smartpho
 
 To test the *sniffer*, use **test-sniffer.sh** program which contains example *sniffer* commands. Then you can for instance try to reach website http://www.idnes.cz/ (that is for news) from the smartphone and inject some news by creating right *replace file*. You can use file *replace.txt* as an example of that file.
 
+For testing purposes, it is also proficient to use 3 virtual machines for attacker and two victims and perform the mitm attack on virtual environment network.
+
 RESTRICTIONS
 ---
 
 Because of that ARP protocol works for IPv4 packets only, program can not work with IPv6 packets.
 
-The arpspoof is working on both systems properly but the sniffer program is not debugged on BSD yet.
+The maximum victims' **MTU** has to be 1500. 
